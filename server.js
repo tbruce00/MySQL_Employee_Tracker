@@ -89,6 +89,7 @@ const addDepartment = () => {
             VALUES('${answer.department}')`,
             (err, answer) => {
                 if(err) throw err;
+                console.table(`Added ${answer.department}.`);
                 runTracker();
             }
         )
@@ -130,8 +131,83 @@ const addRole = () => {
             },
             (err, answer) => {
                 if (err) throw err;
+                console.table(`New Role Added.`);
                 runTracker();
             }
         )
     })
+};
+
+const addEmployee = () => {
+    inquirer
+    .prompt([
+        {
+            name: 'firstName',
+            type: 'input',
+            message: 'What is the employees first name?'
+        },
+        {
+            name: 'lastName',
+            type: 'input',
+            message: 'What is the employees last name?'
+        },
+        {
+            name: 'roleId',
+            type: 'input',
+            message: 'What is the employees Role ID?'
+        }
+    ]).then((answer) => {
+        connect.query(
+            `INSERT INTO Employee (first_name, last_name, role_id, manager_id)
+            VALUES ('${answer.firstName}', '${answer.lastName}', '${answer.roldeId}', NULL)`,
+        (err, answer) => {
+                if (err) throw err;
+                console.table(`New Employee Added.`);
+                runTracker();
+        }
+        )
+    }) 
+};
+
+
+const updateEmployee = () => {
+
+};
+
+const viewList = () => {
+    inquirer
+    .prompt([
+        {
+            name: 'chooseView',
+            type: 'list',
+            message: 'Which would you like to view?',
+            choices: ['Departments', 'Roles', 'Employees'],
+        }
+    ]).then((answer) => {
+        switch(answer.chooseView) {
+            case 'Departments':
+                viewDept();
+                break;
+            case 'Roles':
+                viewRoles();
+                break;
+            case 'Employees':
+                viewEmployees();
+                break;
+            default:
+                runTracker();
+                break;            
+        }
+    })
+};
+
+const viewDept = () => {
+    connection.query(
+        `SELECT * FROM Departments ORDER BY id`,
+        (err, answer) => {
+            if(err) throw err;
+            console.table("Departments", answer);
+            runTracker();
+        }
+    )
 };
