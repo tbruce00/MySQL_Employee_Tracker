@@ -206,8 +206,32 @@ const viewDept = () => {
         `SELECT * FROM Departments ORDER BY id`,
         (err, answer) => {
             if(err) throw err;
-            console.table("Departments", answer);
+            console.table("Departments:", answer);
             runTracker();
         }
     )
 };
+
+const viewRoles = () => {
+    connection.query(
+        `SELECT * FROM Roles ORDER BY id`,
+        (err, answer) => {
+            if(err) throw err;
+            console.table("Roles:", answer);
+            runTracker();
+        }
+    )
+};
+
+const viewEmployees = () => {
+    connection.query(
+        `SELECT * FROM Employees ORDER BY id`,
+        (err, answer) => {
+            if (err) throw err;
+            console.table("Employees:", answer);
+            runTracker();
+        }
+    )
+};
+
+
