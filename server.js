@@ -85,11 +85,11 @@ const addDepartment = () => {
         }
     ]).then((answer) => {
         connection.query(
-            `INSERT INTO Department (name)
+            `INSERT INTO Departments (name)
             VALUES('${answer.department}')`,
             (err, answer) => {
                 if(err) throw err;
-                console.table(`Added ${answer.department}.`);
+                console.table(`Added new Department`);
                 runTracker();
             }
         )
@@ -98,7 +98,7 @@ const addDepartment = () => {
 
 const addRole = () => {
     connection.query(
-        `SELECT * FROM Department ORDER BY id`,
+        `SELECT * FROM Departments ORDER BY id`,
         (err, answer) => {
             if (err) throw err;
         }
@@ -158,7 +158,7 @@ const addEmployee = () => {
         }
     ]).then((answer) => {
         connect.query(
-            `INSERT INTO Employee (first_name, last_name, role_id, manager_id)
+            `INSERT INTO Employees (first_name, last_name, role_id, manager_id)
             VALUES ('${answer.firstName}', '${answer.lastName}', '${answer.roldeId}', NULL)`,
         (err, answer) => {
                 if (err) throw err;
@@ -171,6 +171,36 @@ const addEmployee = () => {
 
 
 const updateEmployee = () => {
+    connection.query(
+        `SELECT * FROM Employees ORDER BY id`,
+        (err, answer) => {
+            if (err) throw err;
+            console.table("Employees:", answer);
+    inquirer
+    .prompt([
+        {
+            name: 'employeID',
+            type: 'input',
+            message: 'Select the employee you would like to update by the ID of that employee'
+        },
+    ]).then((answer) => {
+        connection.query(
+            `UPDATE Employees SET ? WHERE ?`,
+            [
+                {
+                    role_id: answer.roleID,
+                },
+                {
+                    id: answer.employeeID
+                }
+            ],
+            (err, answer) => {
+                if(err) throw err;
+                console.log("Employee has been updated");
+                runTracker();
+            })
+            });
+        });
 
 };
 
