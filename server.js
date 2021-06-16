@@ -25,6 +25,7 @@ const runTracker = () => {
                 'Add Department, Role, or Employee',
                 'Update Employee Role',
                 'View Departments, Roles, Employees',
+                'Delete Employees, Departments, or Roles',
                 'Exit'
 
             ],
@@ -40,6 +41,9 @@ const runTracker = () => {
                 case 'View Departments, Roles, Employees':
                     viewList();
                     break;
+                case 'Delete Employees, Departments, or Roles':
+                    deleteList();
+                    break;    
                 default:
                     console.log('Thanks for using the Tracker');
                     connection.end();
@@ -181,7 +185,7 @@ const updateEmployee = () => {
         {
             name: 'employeID',
             type: 'input',
-            message: 'Select the employee you would like to update by the ID of that employee'
+            message: 'Update the role of the Employee by the new Role ID you want that employee to have',
         },
     ]).then((answer) => {
         connection.query(
@@ -264,4 +268,122 @@ const viewEmployees = () => {
     )
 };
 
+const deleteList = () => {
+    inquirer
+    .prompt([
+        {
+            name: 'deleteList',
+            type: 'list',
+            message: 'Which would you like to delete?',
+            choices: ['Employees', 'Departments', 'Roles'],
+        }
+    ]).then((answer) => {
+        switch(answer.deleteList) {
+            case 'Employees':
+                deleteEmployee();
+                break;
+            case 'Departments':
+                deleteDept();
+                break;
+            case 'Roles':
+                deleteRole();
+                break;
+            default:
+                runTracker();
+                break;            
+        }
+    })
+};
 
+const deleteEmployee = () => {
+    connection.query(
+        `SELECT * FROM Employees ORDER BY id`,
+        (err, answer) => {
+            if (err) throw err;
+            console.table("Employees:", answer);
+    inquirer
+    .prompt([
+        {
+            name: 'deleteEmployee',
+            type: 'input',
+            message: 'Select the employee you would like to delete by the ID of that employee'
+        },
+    ]).then((answer) => {
+        connection.query(
+            `DELETE * FROM Employees WHERE ?`,
+            [
+                {
+                    id: answer.employeeID
+                }
+            ],
+            (err, answer) => {
+                if(err) throw err;
+                console.log("Employee has been deleted");
+                runTracker();
+            })
+            });
+        });
+
+};
+
+const deleteDept = () => {
+    connection.query(
+        `SELECT * FROM Departments ORDER BY id`,
+        (err, answer) => {
+            if (err) throw err;
+            console.table("Departments:", answer);
+    inquirer
+    .prompt([
+        {
+            name: 'deleteDept',
+            type: 'input',
+            message: 'Select the department you would like to delete by the ID of that department'
+        },
+    ]).then((answer) => {
+        connection.query(
+            `DELETE * FROM Departments WHERE ?`,
+            [
+                {
+                    id: answer.departmentID
+                }
+            ],
+            (err, answer) => {
+                if(err) throw err;
+                console.log("Department has been deleted");
+                runTracker();
+            })
+            });
+        });
+
+};
+
+const deleteRole = () => {
+    connection.query(
+        `SELECT * FROM Roles ORDER BY id`,
+        (err, answer) => {
+            if (err) throw err;
+            console.table("Roles:", answer);
+    inquirer
+    .prompt([
+        {
+            name: 'deleteRole',
+            type: 'input',
+            message: 'Select the role you would like to delete by the ID of that role'
+        },
+    ]).then((answer) => {
+        connection.query(
+            `DELETE * FROM Roles WHERE ?`,
+            [
+                {
+                    id: answer.roleID
+                }
+            ],
+            (err, answer) => {
+                if(err) throw err;
+                console.log("Role has been deleted");
+                runTracker();
+            })
+            });
+        });
+
+};
