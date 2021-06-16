@@ -12,7 +12,7 @@
 
 The applications is initialized by opening a command line terminal and running the input npm start.
 
-Accompanied is a <a href=# target="_">Video demonstration.</a>
+Accompanied is a <a href="https://drive.google.com/file/d/1zwBhOrlodIJ2nt4as1DZSfYwkapEjhs2/view" target="_">Video demonstration.</a>
 
 ## Contributions
 

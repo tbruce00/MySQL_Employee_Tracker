@@ -131,7 +131,7 @@ const addRole = () => {
             {
                 title: `${answer.role}`,
                 salary: answer.salary,
-                department_id: answer.department_id
+                department_id: answer.deptId
             },
             (err, answer) => {
                 if (err) throw err;
@@ -161,9 +161,9 @@ const addEmployee = () => {
             message: 'What is the employees Role ID?'
         }
     ]).then((answer) => {
-        connect.query(
+        connection.query(
             `INSERT INTO Employees (first_name, last_name, role_id, manager_id)
-            VALUES ('${answer.firstName}', '${answer.lastName}', '${answer.roldeId}', NULL)`,
+            VALUES ('${answer.firstName}', '${answer.lastName}', '${answer.roleId}', NULL)`,
         (err, answer) => {
                 if (err) throw err;
                 console.table(`New Employee Added.`);
@@ -180,23 +180,36 @@ const updateEmployee = () => {
         (err, answer) => {
             if (err) throw err;
             console.table("Employees:", answer);
+    connection.query(
+        `SELECT * FROM Roles ORDER BY id`,
+        (err,answer) => {
+            if(err) throw err;
+            console.table("Roles:", answer);
+        }
+    );        
     inquirer
     .prompt([
         {
             name: 'employeID',
             type: 'input',
-            message: 'Update the role of the Employee by the new Role ID you want that employee to have',
+            message: 'Choose the Role of the Employee you would like to update by their ID.',
         },
+        {
+            name: 'newRoleID',
+            type: 'input',
+            message: 'Choose the new Role ID you would like the employee to have.',
+        }
     ]).then((answer) => {
         connection.query(
             `UPDATE Employees SET ? WHERE ?`,
             [
                 {
-                    role_id: answer.roleID,
+                    role_id: answer.newRoleID,
                 },
+
                 {
-                    id: answer.employeeID
-                }
+                    id: answer.employeeID,
+                },
             ],
             (err, answer) => {
                 if(err) throw err;
@@ -306,14 +319,14 @@ const deleteEmployee = () => {
         {
             name: 'deleteEmployee',
             type: 'input',
-            message: 'Select the employee you would like to delete by the ID of that employee'
+            message: 'Select the employee you would like to delete by the ID of that employee.'
         },
     ]).then((answer) => {
         connection.query(
-            `DELETE * FROM Employees WHERE ?`,
+            `DELETE FROM Employees WHERE ?`,
             [
                 {
-                    id: answer.employeeID
+                    id: answer.deleteEmployee,
                 }
             ],
             (err, answer) => {
@@ -337,14 +350,14 @@ const deleteDept = () => {
         {
             name: 'deleteDept',
             type: 'input',
-            message: 'Select the department you would like to delete by the ID of that department'
+            message: 'Select the department you would like to delete by the ID of that department.'
         },
     ]).then((answer) => {
         connection.query(
-            `DELETE * FROM Departments WHERE ?`,
+            `DELETE FROM Departments WHERE ?`,
             [
                 {
-                    id: answer.departmentID
+                    id: answer.deleteDept,
                 }
             ],
             (err, answer) => {
@@ -368,14 +381,14 @@ const deleteRole = () => {
         {
             name: 'deleteRole',
             type: 'input',
-            message: 'Select the role you would like to delete by the ID of that role'
+            message: 'Select the role you would like to delete by the ID of that role.'
         },
     ]).then((answer) => {
         connection.query(
-            `DELETE * FROM Roles WHERE ?`,
+            `DELETE FROM Roles WHERE ?`,
             [
                 {
-                    id: answer.roleID
+                    id: answer.deleteRole,
                 }
             ],
             (err, answer) => {
